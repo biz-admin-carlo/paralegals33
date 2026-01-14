@@ -24,3 +24,42 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes testimonials-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.testimonials-marquee {
+  display: flex;
+  width: 200%;
+  animation: testimonials-marquee 40s linear infinite;
+}
+
+.testimonials-marquee-group {
+  display: grid;
+  width: 50%;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .testimonials-marquee-group {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.testimonials-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonials-marquee {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
