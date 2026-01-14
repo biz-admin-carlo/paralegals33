@@ -1,7 +1,11 @@
+"use client";
+
+import type { FormEvent } from "react";
 import { Playfair_Display, Inter } from "next/font/google";
 import Footer from "../components/Footer";
 import { GOLD_LINEAR_GRADIENT } from "@/styles/gradients";
 import Image from "next/image";
+import Link from "next/link";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -20,6 +24,39 @@ const interItalic = Inter({
 });
 
 export default function ContactUsPage() {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    const fullName = (formData.get("fullName") as string) || "";
+    const subjectInput = (formData.get("subject") as string) || "";
+    const email = (formData.get("email") as string) || "";
+    const phone = (formData.get("phone") as string) || "Not provided";
+    const message = (formData.get("message") as string) || "";
+
+    const subject =
+      subjectInput.trim() ||
+      (fullName
+        ? `New inquiry from ${fullName}`
+        : "New inquiry from Paralegal33 website");
+
+    const bodyLines = [
+      fullName && `Full Name: ${fullName}`,
+      email && `Email: ${email}`,
+      phone && `Phone: ${phone}`,
+      "",
+      "Message:",
+      message,
+    ].filter(Boolean) as string[];
+
+    const mailtoLink = `mailto:inquiries@paralegal33.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+
+    window.location.href = mailtoLink;
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-[#041b2a] text-white">
       <main className="flex w-full flex-1 flex-col">
@@ -189,7 +226,10 @@ export default function ContactUsPage() {
 
               <div className="mt-10">
                 <div className="mx-auto w-full max-w-3xl rounded-sm border border-zinc-200 bg-white p-6 text-left shadow-sm sm:p-8">
-                  <form className={`${inter.className} space-y-5`}>
+                  <form
+                    className={`${inter.className} space-y-5`}
+                    onSubmit={handleSubmit}
+                  >
                     <div className="grid gap-5 sm:grid-cols-2">
                       <div className="space-y-2 text-sm">
                         <label className="block text-[13px] font-semibold text-[#1f1f1f]">
@@ -197,8 +237,10 @@ export default function ContactUsPage() {
                         </label>
                         <input
                           type="text"
+                          name="fullName"
                           className="h-9 w-full border border-zinc-300 bg-white px-3 text-sm text-[#1f1f1f] outline-none transition focus:border-[#d89a1b]"
                           placeholder="e.g. John Doe"
+                          required
                         />
                       </div>
                       <div className="space-y-2 text-sm">
@@ -207,7 +249,10 @@ export default function ContactUsPage() {
                         </label>
                         <input
                           type="text"
+                          name="subject"
                           className="h-9 w-full border border-zinc-300 bg-white px-3 text-sm text-[#1f1f1f] outline-none transition focus:border-[#d89a1b]"
+                          placeholder="How can we help you?"
+                          required
                         />
                       </div>
                     </div>
@@ -220,8 +265,10 @@ export default function ContactUsPage() {
                         </label>
                         <input
                           type="email"
+                          name="email"
                           className="h-9 w-full border border-zinc-300 bg-white px-3 text-sm text-[#1f1f1f] outline-none transition focus:border-[#d89a1b]"
                           placeholder="e.g. name@example.com"
+                          required
                         />
                       </div>
                       <div className="space-y-2 text-sm">
@@ -233,6 +280,7 @@ export default function ContactUsPage() {
                         </label>
                         <input
                           type="tel"
+                          name="phone"
                           className="h-9 w-full border border-zinc-300 bg-white px-3 text-sm text-[#1f1f1f] outline-none transition focus:border-[#d89a1b]"
                         />
                       </div>
@@ -244,17 +292,30 @@ export default function ContactUsPage() {
                       </label>
                       <textarea
                         rows={4}
+                        name="message"
                         className="w-full border border-zinc-300 bg-white px-3 py-2 text-sm text-[#1f1f1f] outline-none transition focus:border-[#d89a1b]"
+                        required
                       />
                     </div>
 
                     <p className="mt-2 text-[11px] leading-relaxed text-[#777777]">
                       By clicking submit, you agree to Paralegals 33&apos;s{" "}
-                      <span className="underline">Privacy Policy</span> and{" "}
-                      <span className="underline">Terms of Service</span>, and
-                      consent to receive communications related to your inquiry,
-                      including email or phone contact if provided. You may opt
-                      out at any time.
+                      <Link
+                        href="/privacy-policy"
+                        className="underline hover:text-[#d89a1b]"
+                      >
+                        Privacy Policy
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="/terms-of-service"
+                        className="underline hover:text-[#d89a1b]"
+                      >
+                        Terms of Service
+                      </Link>
+                      , and consent to receive communications related to your
+                      inquiry, including email or phone contact if provided. You
+                      may opt out at any time.
                     </p>
 
                     <div className="mt-5 flex justify-center">
