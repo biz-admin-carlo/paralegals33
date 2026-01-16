@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Paralegals 33",
+  icons: {
+    icon: "/p33-icon.ico",
+    shortcut: "/p33-icon.ico",
+    apple: "/p33-icon.ico",
+  },
 };
 
 export default function RootLayout({
